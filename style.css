@@ -23,6 +23,7 @@ h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom:
 #login-screen { display: flex; flex-direction: column; align-items: center; margin-top: 40px; }
 #login-screen h2 { margin-bottom: 50px; font-size: 1.8rem; font-weight: 700; color: #333; }
 
+/* 오답 시 시각적 피드백: 애니메이션을 통한 인지 부하 강조  */
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 .shake { animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both; }
 
@@ -55,7 +56,17 @@ h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom:
 input[type="text"] { padding: 18px; width: 380px; border: 1.5px solid #eee; border-radius: 12px; outline: none; font-size: 1.1rem; background: #fdfdfd; text-align: center; }
 button { padding: 18px 45px; background: #222; color: #fff; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
 
-.share-btn { background-color: #2ecc71; margin: 30px auto 0 auto; width: 100%; max-width: 450px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); display: block; }
+#keyword-response { font-size: 1.1rem; margin-top: 10px; color: #4a90e2; font-weight: 600; }
+.secondary-btn { padding: 10px 22px; background-color: #f5f5f5; color: #666; font-size: 0.95rem; border:none; border-radius:10px; font-weight: 600; }
+
+.share-btn { 
+    background-color: #2ecc71; 
+    margin: 30px auto 0 auto; 
+    width: 100%; 
+    max-width: 450px; 
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); 
+    display: block; 
+}
 
 #hint-display { color: #4a90e2; font-size: 1.1rem; margin-top: 25px; font-weight: 700; }
 #result-msg { font-size: 1.4rem; margin-top: 25px; margin-bottom: 20px; font-weight: 800; }
@@ -66,6 +77,7 @@ button { padding: 18px 45px; background: #222; color: #fff; border: none; border
 
 #ranking-sidebar { position: fixed; right: 20px; top: 80px; width: 180px; background: #fff; padding: 15px; border-radius: 15px; border: 1px solid #eee; text-align: left; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
+/* 모바일 화면 최적화 */
 @media (max-width: 768px) {
     #memo-tools { display: none; }
     #lives-container { top: 10px; left: 50%; transform: translateX(-50%); font-size: 1.2rem; }
