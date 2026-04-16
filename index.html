@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D73KL470HQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-D73KL470HQ');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>시냅스 스파크 | 매일 1분 뇌 부팅 퀴즈</title>
     <meta name="description" content="매일 아침 00시, 새로운 지능형 퀴즈가 찾아옵니다. 당신의 시냅스를 깨우고 랭킹에 도전하세요!">
     <meta name="keywords" content="퀴즈, 두뇌게임, 시냅스스파크, 매일퀴즈, 창의력, 논리추론, 멧돼지">
-    <meta name="author" content="멧돼지">
-
+    
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://koreanboar.github.io/Synapse-Spark/">
     <meta property="og:title" content="시냅스 스파크⚡ 당신의 뇌는 오늘 깨어있습니까?">
     <meta property="og:description" content="[매일 00시 업데이트] 오늘의 퀴즈 풀고 상위 1% 랭킹에 도전하세요!">
-    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/1164/1164620.png"> <link rel="manifest" href="manifest.json">
+    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/1164/1164620.png">
+
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#222222">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1164/1164620.png">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -78,11 +86,9 @@
             <ul id="ranking-list"><li>로딩 중...</li></ul>
         </aside>
     </div>
-
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-                .then(() => console.log("Service Worker Registered"));
+            navigator.serviceWorker.register('./sw.js').then(() => console.log("Service Worker Registered"));
         }
     </script>
     <script src="script.js"></script>
