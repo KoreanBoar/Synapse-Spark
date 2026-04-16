@@ -194,7 +194,7 @@ function processEnd(quiz, isWin) {
 
     document.getElementById('share-btn').onclick = () => {
         const shareEmoji = isWin ? (hintUsed ? "💡" : "🔥") : "🌑";
-        const shareText = `[시냅스 스파크] #${streak}번째 부팅\n기록: ${time}\n결과: ${isWin ? '성공' : '실패'} ${shareEmoji}\n함께해요! : https://replit.dev/`;
+        const shareText = `[시냅스 스파크] #${streak}번째 부팅\n기록: ${time}\n결과: ${isWin ? '성공' : '실패'} ${shareEmoji}\n함께해요! : https://synapsespark.netlify.app/`;
         navigator.clipboard.writeText(shareText).then(() => alert("오늘의 성과가 복사되었습니다!"));
     };
 }
