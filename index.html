@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시냅스 스파크 | Synapse Spark</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="watermark">by 멧돼지</div>
+
+    <div class="container">
+        <header>
+            <div id="streak-display">🔥 <span id="streak-count">0</span>일 연속 부팅 중</div>
+            <h1>Synapse Spark</h1>
+            <div id="timer">00:00:00</div>
+        </header>
+
+        <main>
+            <section id="login-screen">
+                <h2>오늘의 뇌 부팅을 시작할까요?</h2>
+                <div class="input-group">
+                    <input type="text" id="nickname" placeholder="닉네임을 입력하세요">
+                    <button id="start-btn">부팅 시작</button>
+                </div>
+            </section>
+
+            <section id="quiz-screen" style="display:none;">
+                <div id="memo-wrapper">
+                    <canvas id="memo-canvas"></canvas>
+                    
+                    <div id="lives-container">
+                        <span class="heart">❤️</span>
+                        <span class="heart">❤️</span>
+                        <span class="heart">❤️</span>
+                    </div>
+
+                    <div id="problem-area">
+                        <p id="problem-text"></p>
+                        <p id="hint-display" style="display:none;"></p>
+                    </div>
+                    
+                    <div id="memo-tools">
+                        <div class="color-picker">
+                            <div class="color-dot active" data-color="#4a90e2" style="background:#4a90e2;"></div>
+                            <div class="color-dot" data-color="#ff4757" style="background:#ff4757;"></div>
+                            <div class="color-dot" data-color="#222222" style="background:#222222;"></div>
+                        </div>
+                        <button id="clear-memo-btn">초기화</button>
+                    </div>
+                </div>
+
+                <div class="footer-controls">
+                    <div id="keyword-hint-area" style="display:none; margin-bottom:20px;">
+                        <div class="input-group">
+                            <input type="text" id="keyword-input" placeholder="키워드 질문 (예: 날씨, 도구)">
+                            <button id="keyword-btn" class="secondary-btn">질문하기</button>
+                        </div>
+                        <p id="keyword-response"></p>
+                    </div>
+
+                    <div id="hint-area" style="margin-bottom: 25px;">
+                        <button id="hint-btn" class="secondary-btn">💡 사고의 실타래 풀기 (힌트)</button>
+                    </div>
+
+                    <div id="input-area" class="input-group">
+                        <input type="text" id="answer" placeholder="추론한 정답을 입력하세요">
+                        <button id="submit-btn">제출</button>
+                    </div>
+                    
+                    <div id="result-area" style="display:none;">
+                        <div id="result-content-box"></div>
+                        <p id="result-msg"></p>
+                        <button id="share-btn" class="share-btn">결과 이모지 복사하기</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <aside id="ranking-sidebar">
+            <h3>오늘의 TOP 10</h3>
+            <ul id="ranking-list"><li>로딩 중...</li></ul>
+        </aside>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
