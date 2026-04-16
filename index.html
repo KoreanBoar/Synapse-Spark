@@ -14,12 +14,10 @@
     
     <title>시냅스 스파크 | 매일 1분 뇌 부팅 퀴즈</title>
     <meta name="description" content="매일 아침 00시, 새로운 지능형 퀴즈가 찾아옵니다. 당신의 시냅스를 깨우고 랭킹에 도전하세요!">
-    <meta name="keywords" content="퀴즈, 두뇌게임, 시냅스스파크, 매일퀴즈, 창의력, 논리추론, 멧돼지">
     
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://koreanboar.github.io/Synapse-Spark/">
     <meta property="og:title" content="시냅스 스파크⚡ 당신의 뇌는 오늘 깨어있습니까?">
-    <meta property="og:description" content="[매일 00시 업데이트] 오늘의 퀴즈 풀고 상위 1% 랭킹에 도전하세요!">
     <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/1164/1164620.png">
 
     <link rel="manifest" href="manifest.json">
@@ -88,7 +86,7 @@
     </div>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').then(() => console.log("Service Worker Registered"));
+            navigator.serviceWorker.register('./sw.js');
         }
     </script>
     <script src="script.js"></script>
