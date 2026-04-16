@@ -1,16 +1,9 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
 
-/* 기본 레이아웃 (PC 기준) */
 body { 
-    background-color: #ffffff; 
-    color: #333; 
-    display: flex; 
-    justify-content: center; 
-    align-items: flex-start; 
-    min-height: 100vh; 
-    padding: 80px 20px; 
-    overflow-y: auto; 
-    text-align: center; 
+    background-color: #ffffff; color: #333; 
+    display: flex; justify-content: center; align-items: flex-start; 
+    min-height: 100vh; padding: 80px 20px; overflow-y: auto; text-align: center; 
 }
 
 #watermark { position: fixed; top: 15px; left: 20px; font-size: 11pt; font-weight: bold; color: #ccc; z-index: 1000; }
@@ -21,7 +14,6 @@ header { margin-bottom: 50px; }
 h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 10px; }
 #timer { position: fixed; top: 15px; right: 30px; font-size: 1.6rem; font-weight: bold; color: #ff4757; z-index: 1000; }
 
-#login-screen { display: flex; flex-direction: column; align-items: center; margin-top: 40px; }
 #login-screen h2 { margin-bottom: 50px; font-size: 1.8rem; font-weight: 700; color: #333; }
 
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
@@ -52,12 +44,8 @@ button { padding: 18px 45px; background: #222; color: #fff; border: none; border
 .secondary-btn { padding: 10px 22px; background-color: #f5f5f5; color: #666; font-size: 0.95rem; border:none; border-radius:10px; font-weight: 600; width: auto; }
 
 .share-btn { 
-    background-color: #2ecc71; 
-    margin: 30px auto 0 auto; 
-    width: 100%; 
-    max-width: 450px;
-    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
-    display: block;
+    background-color: #2ecc71; margin: 30px auto 0 auto; width: 100%; max-width: 450px;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); display: block;
 }
 
 #hint-display { color: #4a90e2; font-size: 1.1rem; margin-top: 25px; font-weight: 700; }
@@ -67,21 +55,16 @@ button { padding: 18px 45px; background: #222; color: #fff; border: none; border
     text-align: center; background: #f0f4f8; padding: 30px; border-radius: 15px; 
     margin-top: 20px; border: 1px solid #e1e8f0; line-height: 1.6;
 }
-.solution-box p { margin-bottom: 15px; font-size: 1.1rem; }
 .solution-box strong { color: #2c3e50; font-weight: 800; display: block; margin-bottom: 5px; font-size: 1.2rem; }
 
-/* PC에서 우측 고정 (사용자가 원한 레이아웃 복구) */
 #ranking-sidebar { 
-    position: fixed; right: 20px; top: 120px; width: 220px; 
-    background: #fff; padding: 20px; border-radius: 15px; 
-    border: 1px solid #eee; text-align: left; font-size: 0.85rem; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+    position: fixed; right: 20px; top: 120px; width: 220px; background: #fff; padding: 20px; 
+    border-radius: 15px; border: 1px solid #eee; text-align: left; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
 }
 #ranking-sidebar h3 { text-align: center; border-bottom: 1.5px solid #222; padding-bottom: 8px; margin-bottom: 15px; }
 #ranking-list { list-style: none; padding: 0; }
 #ranking-list li { font-size: 0.85rem; margin-bottom: 10px; display: flex; justify-content: space-between; color: #555; }
 
-/* 모바일 대응 (반응형 설계 반영 ) */
 @media (max-width: 1100px) {
     #ranking-sidebar { position: static; width: 100%; max-width: 450px; margin: 50px auto; box-shadow: none; text-align: center; }
 }
@@ -90,10 +73,8 @@ button { padding: 18px 45px; background: #222; color: #fff; border: none; border
     body { padding-top: 80px; }
     h1 { font-size: 1.8rem; }
     #timer { right: 20px; font-size: 1.2rem; }
-    #login-screen h2 { font-size: 1.4rem; margin-bottom: 30px; }
     #memo-wrapper { height: 40vh; }
     #problem-text { font-size: 1.15rem; padding: 20px; }
     .input-group { flex-direction: column; gap: 10px; }
     input[type="text"], button { width: 100%; max-width: 1000px; }
-    #lives-container { top: 10px; left: 10px; font-size: 1rem; }
 }
