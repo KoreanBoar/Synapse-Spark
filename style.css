@@ -1,5 +1,6 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
 
+/* 기본 레이아웃 (PC 기준) */
 body { 
     background-color: #ffffff; 
     color: #333; 
@@ -7,70 +8,92 @@ body {
     justify-content: center; 
     align-items: flex-start; 
     min-height: 100vh; 
-    padding: 60px 20px; 
+    padding: 80px 20px; 
     overflow-y: auto; 
     text-align: center; 
 }
 
 #watermark { position: fixed; top: 15px; left: 20px; font-size: 11pt; font-weight: bold; color: #ccc; z-index: 1000; }
-.container { width: 100%; max-width: 800px; text-align: center; position: relative; }
+.container { width: 100%; max-width: 900px; text-align: center; position: relative; }
 
 #streak-display { font-size: 0.95rem; font-weight: bold; color: #ff9f43; margin-bottom: 10px; }
-header { margin-bottom: 40px; }
+header { margin-bottom: 50px; }
 h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 10px; }
 #timer { position: fixed; top: 15px; right: 30px; font-size: 1.6rem; font-weight: bold; color: #ff4757; z-index: 1000; }
 
 #login-screen { display: flex; flex-direction: column; align-items: center; margin-top: 40px; }
-#login-screen h2 { margin-bottom: 50px; font-size: 1.8rem; font-weight: 700; color: #333; line-height: 1.4; }
+#login-screen h2 { margin-bottom: 50px; font-size: 1.8rem; font-weight: 700; color: #333; }
 
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 .shake { animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both; }
 
 #memo-wrapper { 
-    position: relative; width: 100%; height: 45vh; 
+    position: relative; width: 100%; height: 48vh; 
     background-color: #f8f9fa; border: 1px solid #eee; border-radius: 20px; 
     margin-bottom: 25px; display: flex; justify-content: center; align-items: center; 
 }
 #memo-canvas { position: absolute; top: 0; left: 0; z-index: 10; cursor: crosshair; }
-#lives-container { position: absolute; top: 15px; left: 15px; z-index: 25; display: flex; gap: 5px; font-size: 1.2rem; }
+#lives-container { position: absolute; top: 20px; left: 20px; z-index: 25; display: flex; gap: 5px; font-size: 1.4rem; pointer-events: none; }
 
-#problem-area { padding: 30px; z-index: 5; pointer-events: none; width: 100%; white-space: pre-wrap; }
-#problem-text { font-size: 1.3rem; font-weight: 600; line-height: 1.7; color: #222; }
+#problem-area { padding: 40px; z-index: 5; pointer-events: none; width: 100%; white-space: pre-wrap; }
+#problem-text { font-size: 1.5rem; font-weight: 600; line-height: 1.8; color: #222; }
 
-#memo-tools { position: absolute; top: 15px; right: 15px; z-index: 20; display: flex; align-items: center; gap: 10px; }
-.color-picker { display: flex; gap: 6px; background: rgba(255,255,255,0.9); padding: 5px 8px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.color-dot { width: 16px; height: 16px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-.color-dot.active { border-color: #333; transform: scale(1.1); }
-#clear-memo-btn { padding: 5px 10px; font-size: 0.75rem; border: none; border-radius: 6px; background: #eee; cursor: pointer; color: #666; }
+#memo-tools { position: absolute; top: 15px; right: 15px; z-index: 20; display: flex; align-items: center; gap: 15px; }
+.color-picker { display: flex; gap: 8px; background: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.color-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.color-dot.active { border-color: #333; transform: scale(1.2); }
+#clear-memo-btn { padding: 6px 12px; font-size: 0.8rem; border: none; border-radius: 6px; background: #eee; cursor: pointer; color: #666; }
 
-.input-group { display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%; flex-wrap: wrap; }
-input[type="text"] { padding: 15px; width: 100%; max-width: 350px; border: 1.5px solid #eee; border-radius: 12px; outline: none; font-size: 1rem; background: #fdfdfd; text-align: center; }
-button { padding: 15px 30px; background: #222; color: #fff; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1rem; width: 100%; max-width: 350px; }
+.input-group { display: flex; justify-content: center; align-items: center; gap: 15px; width: 100%; }
+input[type="text"] { padding: 18px; width: 380px; border: 1.5px solid #eee; border-radius: 12px; outline: none; font-size: 1.1rem; background: #fdfdfd; text-align: center; }
+button { padding: 18px 45px; background: #222; color: #fff; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
 
-#keyword-response { font-size: 1rem; margin-top: 10px; color: #4a90e2; font-weight: 600; }
-.secondary-btn { padding: 10px 20px; background-color: #f5f5f5; color: #666; font-size: 0.9rem; border:none; border-radius:10px; font-weight: 600; width: auto; }
+#keyword-response { font-size: 1.1rem; margin-top: 10px; color: #4a90e2; font-weight: 600; }
+.secondary-btn { padding: 10px 22px; background-color: #f5f5f5; color: #666; font-size: 0.95rem; border:none; border-radius:10px; font-weight: 600; width: auto; }
 
-.share-btn { background-color: #2ecc71; margin: 30px auto; width: 100%; max-width: 350px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); display: block; }
+.share-btn { 
+    background-color: #2ecc71; 
+    margin: 30px auto 0 auto; 
+    width: 100%; 
+    max-width: 450px;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    display: block;
+}
 
-#hint-display { color: #4a90e2; font-size: 1rem; margin-top: 20px; font-weight: 700; }
-#result-msg { font-size: 1.2rem; margin-top: 20px; margin-bottom: 20px; font-weight: 800; }
+#hint-display { color: #4a90e2; font-size: 1.1rem; margin-top: 25px; font-weight: 700; }
+#result-msg { font-size: 1.4rem; margin-top: 25px; margin-bottom: 20px; font-weight: 800; }
 
-.solution-box { text-align: center; background: #f0f4f8; padding: 25px; border-radius: 15px; margin-top: 20px; border: 1px solid #e1e8f0; line-height: 1.5; }
-.solution-box p { margin-bottom: 12px; font-size: 1rem; }
-.solution-box strong { color: #2c3e50; font-weight: 800; display: block; margin-bottom: 4px; font-size: 1.1rem; }
+.solution-box { 
+    text-align: center; background: #f0f4f8; padding: 30px; border-radius: 15px; 
+    margin-top: 20px; border: 1px solid #e1e8f0; line-height: 1.6;
+}
+.solution-box p { margin-bottom: 15px; font-size: 1.1rem; }
+.solution-box strong { color: #2c3e50; font-weight: 800; display: block; margin-bottom: 5px; font-size: 1.2rem; }
 
-#ranking-sidebar { position: static; width: 100%; max-width: 350px; background: #fff; padding: 15px; border-radius: 15px; border: 1px solid #eee; text-align: left; font-size: 0.8rem; margin: 40px auto; }
+/* PC에서 우측 고정 (사용자가 원한 레이아웃 복구) */
+#ranking-sidebar { 
+    position: fixed; right: 20px; top: 120px; width: 220px; 
+    background: #fff; padding: 20px; border-radius: 15px; 
+    border: 1px solid #eee; text-align: left; font-size: 0.85rem; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+}
 #ranking-sidebar h3 { text-align: center; border-bottom: 1.5px solid #222; padding-bottom: 8px; margin-bottom: 15px; }
+#ranking-list { list-style: none; padding: 0; }
+#ranking-list li { font-size: 0.85rem; margin-bottom: 10px; display: flex; justify-content: space-between; color: #555; }
 
-/* 모바일 최적화 (핵심!) */
+/* 모바일 대응 (반응형 설계 반영 ) */
+@media (max-width: 1100px) {
+    #ranking-sidebar { position: static; width: 100%; max-width: 450px; margin: 50px auto; box-shadow: none; text-align: center; }
+}
+
 @media (max-width: 600px) {
     body { padding-top: 80px; }
     h1 { font-size: 1.8rem; }
     #timer { right: 20px; font-size: 1.2rem; }
-    #streak-display { font-size: 0.85rem; }
     #login-screen h2 { font-size: 1.4rem; margin-bottom: 30px; }
     #memo-wrapper { height: 40vh; }
-    #problem-text { font-size: 1.1rem; }
-    .input-group { flex-direction: column; }
-    input[type="text"], button { max-width: 100%; }
+    #problem-text { font-size: 1.15rem; padding: 20px; }
+    .input-group { flex-direction: column; gap: 10px; }
+    input[type="text"], button { width: 100%; max-width: 1000px; }
+    #lives-container { top: 10px; left: 10px; font-size: 1rem; }
 }
