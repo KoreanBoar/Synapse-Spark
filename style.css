@@ -57,7 +57,6 @@ button { padding: 18px 45px; background: #222; color: #fff; border: none; border
 }
 .solution-box strong { color: #2c3e50; font-weight: 800; display: block; margin-bottom: 5px; font-size: 1.2rem; }
 
-/* PC 랭킹 사이드바 */
 #ranking-sidebar { 
     position: fixed; right: 20px; top: 120px; width: 220px; background: #fff; padding: 20px; 
     border-radius: 15px; border: 1px solid #eee; text-align: left; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
