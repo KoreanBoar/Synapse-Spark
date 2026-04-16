@@ -1,0 +1,16 @@
+{
+  "name": "시냅스 스파크: Synapse Spark",
+  "short_name": "시냅스",
+  "description": "매일 아침 뇌를 깨우는 1분 퀴즈 플랫폼",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#222222",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1164/1164620.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
