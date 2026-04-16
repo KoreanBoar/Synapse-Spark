@@ -3,64 +3,14 @@ let attemptsLeft = 3;
 const PENALTY_TIME = 30000;
 const CURRENT_DATE = new Date().toLocaleDateString();
 
-// 요일별 고난도 문제 데이터 (목요일: 언어 유추 -> 수리 논리 교체)
 const WEEKLY_QUIZ = [
-    { 
-        day: 0, 
-        text: "[일요일: 수량적 추론]\n1부터 10까지의 모든 자연수로 나누어 떨어지는\n가장 작은 양의 정수는 무엇일까요?", 
-        ans: "2520", 
-        hint: "단순한 곱셈이 아니라, 모든 수의 최소공배수를 구하는 원리를 적용해보세요.", 
-        exp: "1~10의 최소공배수는 2520입니다. (2^3 * 3^2 * 5 * 7)", 
-        src: "Project Euler #5 기반", type: "math" 
-    },
-    { 
-        day: 1, 
-        text: "[월요일: 논리 행렬]\n세 명 중 단 한 명만 진실을 말합니다.\nA: 'B는 거짓말쟁이다.'\nB: 'C는 거짓말쟁이다.'\nC: 'A와 B는 모두 거짓말쟁이다.'\n진실을 말하는 자는 누구입니까?", 
-        ans: "B", 
-        hint: "B가 진실이라고 가정했을 때 다른 두 사람의 진술에 모순이 생기는지 확인하세요.", 
-        exp: "B가 진실이라면 A와 C의 진술은 모두 거짓이 되어 조건에 완벽히 부합합니다.", 
-        src: "Mensa 논리 추론 모델", type: "logic" 
-    },
-    { 
-        day: 2, 
-        text: "[화요일: 패턴 인식]\n2, 5, 11, 23, 47...\n다음에 올 숫자는 무엇일까요?", 
-        ans: "95", 
-        hint: "이전 숫자의 두 배에 특정 상수를 더하는 규칙을 찾아보세요.", 
-        exp: "이전 숫자에 2를 곱하고 1을 더하는 규칙(2n+1)입니다.", 
-        src: "수치 패턴 인식 모델", type: "math" 
-    },
-    { 
-        day: 3, 
-        text: "[수요일: 상황 추리]\n남자는 비가 오지 않는 날에는 엘리베이터를\n7층까지만 타고 내려서 나머지는 걸어 올라갑니다.\n이유는 무엇일까요? (두 글자)", 
-        ans: "단신", 
-        hint: "남자의 신체적 특징과 비 오는 날 휴대하는 '긴 도구'의 용도를 연결해보세요.", 
-        exp: "남자는 키가 작아 높은 층 버튼에 손이 닿지 않지만, 우산을 쓰면 누를 수 있습니다.", 
-        src: "Lateral Thinking Puzzles", type: "situation", keywords: { "키": "그것이 가장 결정적인 단서입니다.", "우산": "긴 도구로서 버튼을 누르게 해줍니다.", "버튼": "손이 닿기엔 너무 높습니다." } 
-    },
-    { 
-        day: 4, 
-        text: "[목요일: 수리 논리]\n어느 모임에서 모든 사람이 서로 한 번씩 악수를 했습니다.\n총 악수 횟수가 66번일 때, 모인 사람은 총 몇 명입니까?", 
-        ans: "12", 
-        hint: "n명이 서로 악수하는 횟수 공식 n(n-1)/2를 활용해보세요.", 
-        exp: "12명일 때, 12 * 11 / 2 = 66이 되어 정답은 12명입니다.", 
-        src: "기초 조합론 및 논리", type: "math" 
-    },
-    { 
-        day: 5, 
-        text: "[금요일: 공간 지각]\n주사위 마주 보는 면의 합은 7입니다.\n위가 1, 정면이 2인 상태에서 오른쪽으로 한 번,\n앞으로 한 번 굴렸을 때 윗면은?", 
-        ans: "5", 
-        hint: "굴릴 때마다 바닥과 맞닿는 면의 반대편이 어디로 이동하는지 그려보세요.", 
-        exp: "오른쪽으로 굴리면 위가 4, 앞으로 굴리면 기존 뒷면인 5가 위로 오게 됩니다.", 
-        src: "공간 지각력 측정 모델", type: "spatial" 
-    },
-    { 
-        day: 6, 
-        text: "[토요일: 제약 충족]\n8개의 동전 중 가짜(가벼움) 1개가 있습니다.\n양팔 저울을 단 2번만 사용하여 찾을 수 있다면,\n그 최소 횟수를 입력하세요.", 
-        ans: "2", 
-        hint: "동전들을 세 그룹으로 나누어 비교하는 전략이 효율적입니다.", 
-        exp: "3, 3, 2개 그룹으로 나누어 비교하면 2번 만에 가짜를 특정할 수 있습니다.", 
-        src: "Constraint Satisfaction Problems", type: "logic" 
-    }
+    { day: 0, text: "[일요일: 수량적 추론]\n1부터 10까지의 모든 자연수로 나누어 떨어지는\n가장 작은 양의 정수는 무엇일까요?", ans: "2520", hint: "최소공배수 원리를 적용해보세요.", exp: "1~10의 최소공배수는 2520입니다.", src: "Project Euler #5", type: "math" },
+    { day: 1, text: "[월요일: 논리 행렬]\n한 명만 진실을 말합니다.\nA: 'B는 거짓이다.', B: 'C는 거짓이다.', C: 'A,B 모두 거짓이다.'\n진실을 말하는 자는?", ans: "B", hint: "B가 진실일 때 모순이 없는지 보세요.", exp: "B가 진실이면 A, C는 거짓이 되어 완벽합니다.", src: "Mensa 논리", type: "logic" },
+    { day: 2, text: "[화요일: 패턴 인식]\n2, 5, 11, 23, 47...\n다음에 올 숫자는?", ans: "95", hint: "2n+1 규칙을 생각하세요.", exp: "47*2+1 = 95입니다.", src: "수치 패턴", type: "math" },
+    { day: 3, text: "[수요일: 상황 추리]\n남자는 맑은 날엔 엘리베이터를 7층까지만 탑니다.\n이유는 무엇일까요? (두 글자)", ans: "단신", hint: "남자의 키와 비 오는 날의 도구(우산)를 생각하세요.", exp: "키가 작아 버튼에 안 닿지만 우산으로는 누를 수 있습니다.", src: "Lateral Thinking", type: "situation", keywords: { "키": "결정적 단서입니다.", "우산": "긴 도구입니다." } },
+    { day: 4, text: "[목요일: 수리 논리]\n악수가 총 66번 일어났다면\n모임에 참석한 인원은 몇 명입니까?", ans: "12", hint: "n(n-1)/2 공식을 활용하세요.", exp: "12*11/2 = 66이므로 12명입니다.", src: "조합론", type: "math" },
+    { day: 5, text: "[금요일: 공간 지각]\n위가 1, 정면이 2인 주사위를\n우측으로 한 번, 앞으로 한 번 굴렸을 때 윗면은?", ans: "5", hint: "면의 이동을 시뮬레이션하세요.", exp: "우측으로 굴리면 4, 앞으로 굴리면 5가 위로 옵니다.", src: "공간 지각력", type: "spatial" },
+    { day: 6, text: "[토요일: 제약 충족]\n8개 동전 중 가짜 1개를 단 2번의 저울질로 찾으려면\n필요한 최소 저울질 횟수는?", ans: "2", hint: "3개 그룹으로 나누어 비교하세요.", exp: "3, 3, 2로 나누면 2번 만에 가능합니다.", src: "Constraint Satisfaction", type: "logic" }
 ];
 
 const canvas = document.getElementById('memo-canvas');
@@ -106,7 +56,7 @@ document.getElementById('clear-memo-btn').onclick = () => ctx.clearRect(0, 0, ca
 
 document.getElementById('start-btn').onclick = () => {
     nickname = document.getElementById('nickname').value.trim();
-    if (!nickname) return alert("부팅을 위해 닉네임을 입력해주세요!");
+    if (!nickname) return alert("닉네임을 입력해주세요!");
     attemptsLeft = 3; 
     updateLivesDisplay();
     document.getElementById('login-screen').style.display = 'none';
@@ -125,7 +75,7 @@ document.getElementById('start-btn').onclick = () => {
 document.getElementById('keyword-btn').onclick = () => {
     const input = document.getElementById('keyword-input').value.trim();
     const quiz = WEEKLY_QUIZ.find(q => q.day === new Date().getDay());
-    document.getElementById('keyword-response').innerText = quiz.keywords && quiz.keywords[input] ? `"${input}": ${quiz.keywords[input]}` : "그 단어는 핵심과 거리가 멉니다.";
+    document.getElementById('keyword-response').innerText = quiz.keywords && quiz.keywords[input] ? `"${input}": ${quiz.keywords[input]}` : "관련 없음.";
     hintUsed = true;
 };
 
@@ -147,20 +97,14 @@ document.getElementById('submit-btn').onclick = () => {
         startTime -= PENALTY_TIME;
         document.querySelector('.container').classList.add('shake');
         setTimeout(() => document.querySelector('.container').classList.remove('shake'), 300);
-        
-        if (attemptsLeft === 0) {
-            clearInterval(timerInterval);
-            processEnd(quiz, false);
-        } else {
-            alert(`오답입니다! \n남은 목숨: ${attemptsLeft}개 \n(+30초가 추가되었습니다)`);
-        }
+        if (attemptsLeft === 0) { clearInterval(timerInterval); processEnd(quiz, false); }
+        else { alert(`오답입니다! \n남은 목숨: ${attemptsLeft}개 \n(+30초 추가)`); }
     }
 };
 
 function processEnd(quiz, isWin) {
     const time = document.getElementById('timer').innerText;
     let streak = parseInt(localStorage.getItem('streakCount')) || 0;
-    
     if (isWin) {
         if (localStorage.getItem('lastSolveDate') !== CURRENT_DATE) {
             streak++; localStorage.setItem('streakCount', streak);
@@ -185,8 +129,8 @@ function processEnd(quiz, isWin) {
         </div>`;
     
     const resultColor = isWin ? "#2ecc71" : "#ff4757";
-    const resultMsg = isWin ? `${nickname}님, 부팅 성공! 🎉` : `${nickname}님, 부팅 실패... 💀`;
-    const emoji = isWin ? (hintUsed ? "💡 (사고의 도움)" : "🔥 (완전한 통찰)") : "🌑 (내일 다시 도전)";
+    const resultMsg = isWin ? `${nickname}님, 성공! 🎉` : `${nickname}님, 실패... 💀`;
+    const emoji = isWin ? (hintUsed ? "💡" : "🔥") : "🌑";
     
     const msgElement = document.getElementById('result-msg');
     msgElement.innerText = `${resultMsg} 기록: ${time} ${emoji}`;
@@ -194,7 +138,7 @@ function processEnd(quiz, isWin) {
 
     document.getElementById('share-btn').onclick = () => {
         const shareEmoji = isWin ? (hintUsed ? "💡" : "🔥") : "🌑";
-        const shareText = `[시냅스 스파크] #${streak}번째 부팅\n기록: ${time}\n결과: ${isWin ? '성공' : '실패'} ${shareEmoji}\n함께해요! : https://synapsespark.netlify.app/`;
+        const shareText = `[시냅스 스파크] #${streak}번째 부팅\n결과: ${isWin ? '성공' : '실패'} ${shareEmoji}\n함께해요! : https://synapsespark.netlify.app/`;
         navigator.clipboard.writeText(shareText).then(() => alert("오늘의 성과가 복사되었습니다!"));
     };
 }
