@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>시냅스 스파크 | Synapse Spark</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -28,18 +28,15 @@
             <section id="quiz-screen" style="display:none;">
                 <div id="memo-wrapper">
                     <canvas id="memo-canvas"></canvas>
-                    
                     <div id="lives-container">
                         <span class="heart">❤️</span>
                         <span class="heart">❤️</span>
                         <span class="heart">❤️</span>
                     </div>
-
                     <div id="problem-area">
                         <p id="problem-text"></p>
                         <p id="hint-display" style="display:none;"></p>
                     </div>
-                    
                     <div id="memo-tools">
                         <div class="color-picker">
                             <div class="color-dot active" data-color="#4a90e2" style="background:#4a90e2;"></div>
@@ -53,21 +50,18 @@
                 <div class="footer-controls">
                     <div id="keyword-hint-area" style="display:none; margin-bottom:20px;">
                         <div class="input-group">
-                            <input type="text" id="keyword-input" placeholder="키워드 질문 (예: 날씨, 도구)">
+                            <input type="text" id="keyword-input" placeholder="키워드 질문">
                             <button id="keyword-btn" class="secondary-btn">질문하기</button>
                         </div>
                         <p id="keyword-response"></p>
                     </div>
-
                     <div id="hint-area" style="margin-bottom: 25px;">
                         <button id="hint-btn" class="secondary-btn">💡 사고의 실타래 풀기 (힌트)</button>
                     </div>
-
                     <div id="input-area" class="input-group">
-                        <input type="text" id="answer" placeholder="추론한 정답을 입력하세요">
+                        <input type="text" id="answer" placeholder="정답을 입력하세요">
                         <button id="submit-btn">제출</button>
                     </div>
-                    
                     <div id="result-area" style="display:none;">
                         <div id="result-content-box"></div>
                         <p id="result-msg"></p>
