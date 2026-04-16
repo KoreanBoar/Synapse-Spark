@@ -15,14 +15,24 @@ const database = firebase.database();
 let startTime, timerInterval, nickname = "", currentQuiz = null;
 let attemptsLeft = 3;
 const PENALTY_TIME = 30000;
-const TODAY_KEY = new Date().toISOString().split('T')[0];
+const TODAY_KEY = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
+// [수정] 멧돼지님 DB 구조에 맞게 경로 최적화
 async function fetchTodayQuiz() {
     return new Promise((resolve) => {
-        database.ref('quizzes/' + TODAY_KEY).once('value', (snapshot) => {
+        // DB 최상단에서 바로 날짜 키값을 찾습니다.
+        database.ref(TODAY_KEY).once('value', (snapshot) => {
             const quiz = snapshot.val();
-            if (quiz) resolve(quiz);
-            else resolve({ text: "[부팅 오류] 오늘의 문제가 없습니다.", ans: "멧돼지", exp: "관리자에게 문의하세요.", hint: "정답은 '멧돼지'입니다." });
+            if (quiz) {
+                resolve(quiz);
+            } else {
+                resolve({ 
+                    text: "[데이터 매칭 오류]\n서버에서 오늘 날짜(" + TODAY_KEY + ")의 문제를 찾을 수 없습니다.\nDB의 날짜 형식을 확인해주세요.", 
+                    ans: "에러", 
+                    exp: "DB의 날짜 키값과 TODAY_KEY가 일치해야 합니다.",
+                    hint: "서버 데이터를 점검하세요."
+                });
+            }
         });
     });
 }
@@ -46,7 +56,6 @@ document.getElementById('start-btn').onclick = async () => {
     
     currentQuiz = await fetchTodayQuiz();
     
-    // GA4 이벤트: 퀴즈 시작
     gtag('event', 'quiz_start', { 'nickname': nickname, 'quiz_date': TODAY_KEY });
 
     document.getElementById('login-screen').style.display = 'none';
@@ -110,7 +119,7 @@ function processEnd(isWin) {
 }
 
 function saveToFirebase(n, t) {
-    const dateKey = TODAY_KEY.replace(/-/g, "");
+    const dateKey = TODAY_KEY.replace(/-/g, ""); // 랭킹은 검색 최적화를 위해 하이픈 제거 (20260416)
     const durationMs = Date.now() - startTime;
     if (durationMs < 500) return;
     database.ref('rankings/' + dateKey).push({
