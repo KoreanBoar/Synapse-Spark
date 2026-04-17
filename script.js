@@ -140,10 +140,6 @@ function saveToFirebase(n, t) {
     database.ref('rankings/' + dateKey).push({
         name: n, time: t, duration: durationMs,
         timestamp: firebase.database.ServerValue.TIMESTAMP
-    }).then(() => {
-        console.log("기록 전송 성공!");
-    }).catch((error) => {
-        console.error("기록 전송 실패:", error);
     });
 }
 
@@ -160,11 +156,7 @@ function displayGlobalRanking() {
                 li.innerHTML = `<span><strong>${idx+1}. ${item.name}</strong></span> <span>${item.time}</span>`;
                 rankingList.appendChild(li);
             });
-        } else { 
-            const emptyLi = document.createElement('li');
-            emptyLi.innerText = "첫 도전자가 되어보세요!";
-            rankingList.appendChild(emptyLi); 
-        }
+        } else { rankingList.innerHTML = "<li>첫 도전자가 되어보세요!</li>"; }
     });
 }
 
