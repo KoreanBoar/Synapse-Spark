@@ -137,14 +137,21 @@ function processEnd(isWin) {
 function saveToFirebase(n, t) {
     const dateKey = TODAY_KEY.replace(/-/g, "");
     const durationMs = Date.now() - startTime;
+    // 기록 전송 로그 추가
+    console.log("기록 전송 중:", n, t); 
     database.ref('rankings/' + dateKey).push({
         name: n, time: t, duration: durationMs,
         timestamp: firebase.database.ServerValue.TIMESTAMP
+    }).then(() => {
+        console.log("기록 전송 완료!");
+    }).catch((error) => {
+        console.error("기록 전송 실패:", error);
     });
 }
 
 function displayGlobalRanking() {
     const dateKey = TODAY_KEY.replace(/-/g, "");
+    // 실시간 리스너 유지
     database.ref('rankings/' + dateKey).orderByChild('time').limitToFirst(10).on('value', (snapshot) => {
         const rankingList = document.getElementById('ranking-list');
         rankingList.innerHTML = "";
@@ -156,7 +163,7 @@ function displayGlobalRanking() {
                 li.innerHTML = `<span><strong>${idx+1}. ${item.name}</strong></span> <span>${item.time}</span>`;
                 rankingList.appendChild(li);
             });
-        } else { rankingList.innerHTML = "<li>첫 도전자가 되어보세요!</li>"; }
+        } else { rankingList.appendChild(Object.assign(document.createElement('li'), { innerHTML: "첫 도전자가 되어보세요!" })); }
     });
 }
 
