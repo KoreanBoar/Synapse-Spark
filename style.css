@@ -1,193 +1,50 @@
-const firebaseConfig = {
-    apiKey: "AIzaSyCbLpF-2URkZFTQsdpyQ8_9bVbT3PDWdYk",
-    authDomain: "synapse-spark-34210.firebaseapp.com",
-    databaseURL: "https://synapse-spark-34210-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "synapse-spark-34210",
-    storageBucket: "synapse-spark-34210.firebasestorage.app",
-    messagingSenderId: "481210459623",
-    appId: "1:481210459623:web:a3f848f6fe350398d94942",
-    measurementId: "G-D73KL470HQ"
-};
+/* 기본 설정 및 모바일 터치 최적화 */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background-color: #ffffff; color: #333; display: flex; justify-content: center; min-height: 100vh; padding: 60px 20px; overflow-x: hidden; text-align: center; }
+#watermark { position: fixed; top: 15px; left: 20px; font-size: 11pt; font-weight: bold; color: #ccc; z-index: 1000; }
+.container { width: 100%; max-width: 900px; position: relative; }
 
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
-let startTime, timerInterval, nickname = "", currentQuiz = null;
-let attemptsLeft = 3;
-const PENALTY_TIME = 30000;
-const TODAY_KEY = new Date().toISOString().split('T')[0];
-
-async function fetchTodayQuiz() {
-    return new Promise((resolve) => {
-        database.ref(TODAY_KEY).once('value', (snapshot) => {
-            const quiz = snapshot.val();
-            if (quiz) resolve(quiz);
-            else resolve({ text: "[부팅 오류] 오늘의 문제가 없습니다.", ans: "멧돼지", exp: "관리자에게 문의하세요.", hint: "정답은 '멧돼지'입니다.", guide: "관리자 닉네임을 입력하세요." });
-        });
-    });
+/* 페널티 오버레이 애니메이션 */
+#penalty-overlay {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(255, 71, 87, 0.95); color: white; padding: 20px 40px;
+    border-radius: 50px; font-size: 1.5rem; font-weight: 800; z-index: 9999;
+    box-shadow: 0 10px 30px rgba(255, 71, 87, 0.4); animation: fadeInOut 1s ease-in-out;
+}
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -30%); }
+    20% { opacity: 1; transform: translate(-50%, -50%); }
+    80% { opacity: 1; transform: translate(-50%, -50%); }
+    100% { opacity: 0; transform: translate(-50%, -70%); }
 }
 
-window.onload = () => { updateStreakDisplay(); displayGlobalRanking(); resizeCanvas(); };
-window.addEventListener('resize', resizeCanvas);
+/* 헤더 및 타이머 */
+#streak-display { font-size: 0.95rem; font-weight: bold; color: #ff9f43; margin-bottom: 10px; }
+header { margin-bottom: 40px; }
+h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 800; letter-spacing: -1.5px; }
+#timer { position: fixed; top: 15px; right: 20px; font-size: clamp(1rem, 3vw, 1.6rem); font-weight: bold; color: #ff4757; z-index: 1000; background: rgba(255,255,255,0.8); padding: 5px 10px; border-radius: 10px; }
 
-const canvas = document.getElementById('memo-canvas');
-const ctx = canvas.getContext('2d');
-let isDrawing = false, drawColor = "#4a90e2";
+/* 퀴즈 박스 (반응형 높이) */
+#memo-wrapper { position: relative; width: 100%; min-height: 300px; height: 45vh; background: #f8f9fa; border-radius: 20px; margin-bottom: 25px; border: 1px solid #eee; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+#memo-canvas { position: absolute; top: 0; left: 0; z-index: 10; cursor: crosshair; }
+#problem-text { font-size: clamp(1rem, 4vw, 1.5rem); font-weight: 600; line-height: 1.7; padding: 30px; z-index: 5; pointer-events: none; }
 
-function resizeCanvas() {
-    const wrapper = document.getElementById('memo-wrapper');
-    if (wrapper) { canvas.width = wrapper.offsetWidth; canvas.height = wrapper.offsetHeight; resetCtx(); }
+/* 입력 영역 및 가이드 */
+.input-group { display: flex; gap: 10px; width: 100%; justify-content: center; }
+input[type="text"] { flex: 1; max-width: 400px; padding: 15px; border: 2px solid #eee; border-radius: 12px; font-size: 1.1rem; outline: none; transition: 0.2s; }
+input[type="text"]:focus { border-color: #222; }
+button { padding: 15px 35px; background: #222; color: #fff; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; }
+#answer-guide { margin-top: 10px; font-size: 0.9rem; color: #888; font-weight: 500; min-height: 1.2rem; }
+
+/* 해설 박스 수식 강화 */
+.solution-box { text-align: left; background: #f0f4f8; padding: 25px; border-radius: 15px; margin-top: 20px; line-height: 1.8; }
+.solution-box strong { color: #2c3e50; display: block; margin-bottom: 12px; font-size: 1.2rem; border-left: 4px solid #2c3e50; padding-left: 10px; }
+.formula { display: block; background: #fff; padding: 15px; border-radius: 10px; margin: 15px 0; text-align: center; font-weight: 700; color: #4a90e2; font-size: 1.3rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+
+/* 랭킹 사이드바 모바일 대응 */
+#ranking-sidebar { position: fixed; right: 20px; top: 120px; width: 200px; background: #fff; padding: 20px; border-radius: 15px; border: 1px solid #eee; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+@media (max-width: 1150px) {
+    #ranking-sidebar { position: static; width: 100%; max-width: 450px; margin: 40px auto; }
+    .input-group { flex-direction: column; }
+    input[type="text"], button { width: 100%; }
 }
-function resetCtx() { ctx.strokeStyle = drawColor; ctx.lineWidth = 2; ctx.lineCap = "round"; }
-
-document.getElementById('start-btn').onclick = async () => {
-    nickname = document.getElementById('nickname').value.trim();
-    if (!nickname) return alert("닉네임을 입력해주세요!");
-    currentQuiz = await fetchTodayQuiz();
-    
-    gtag('event', 'quiz_start', { 'nickname': nickname, 'quiz_date': TODAY_KEY });
-
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('quiz-screen').style.display = 'block';
-    document.getElementById('problem-text').innerText = currentQuiz.text;
-    
-    // [신규] 정답 가이드 표시 (데이터에 guide가 있을 경우에만)
-    if (currentQuiz.guide) {
-        document.getElementById('answer-guide').innerText = "💡 가이드: " + currentQuiz.guide;
-    }
-
-    startTime = Date.now();
-    timerInterval = setInterval(() => {
-        const diff = new Date(Date.now() - startTime);
-        document.getElementById('timer').innerText = diff.toISOString().substr(11, 8);
-    }, 1000);
-    resizeCanvas();
-};
-
-document.getElementById('submit-btn').onclick = () => {
-    const userInput = document.getElementById('answer').value.trim();
-    
-    // [핵심] 다중 정답 체크 로직 (| 기호로 정답을 분리)
-    const possibleAnswers = currentQuiz.ans.split('|').map(a => a.trim());
-    const isCorrect = possibleAnswers.includes(userInput);
-
-    if (isCorrect) {
-        clearInterval(timerInterval);
-        processEnd(true);
-    } else {
-        attemptsLeft--; updateLivesDisplay();
-        startTime -= PENALTY_TIME;
-        showPenaltyMsg();
-        document.querySelector('.container').classList.add('shake');
-        setTimeout(() => document.querySelector('.container').classList.remove('shake'), 300);
-        gtag('event', 'quiz_wrong_answer', { 'attempts_left': attemptsLeft });
-        if (attemptsLeft === 0) { clearInterval(timerInterval); processEnd(false); }
-    }
-};
-
-function showPenaltyMsg() {
-    const overlay = document.getElementById('penalty-overlay');
-    overlay.style.display = 'block';
-    setTimeout(() => { overlay.style.display = 'none'; }, 1000);
-}
-
-function processEnd(isWin) {
-    const time = document.getElementById('timer').innerText;
-    let streak = parseInt(localStorage.getItem('streakCount')) || 0;
-    
-    if (isWin) {
-        saveToFirebase(nickname, time);
-        gtag('event', 'quiz_success', { 'time_taken': time, 'streak': streak + 1 });
-        if (localStorage.getItem('lastSolveDate') !== TODAY_KEY) {
-            streak++; localStorage.setItem('streakCount', streak);
-            localStorage.setItem('lastSolveDate', TODAY_KEY);
-        }
-    } else { 
-        streak = 0; localStorage.setItem('streakCount', 0); 
-        gtag('event', 'quiz_fail', { 'quiz_date': TODAY_KEY });
-    }
-
-    document.getElementById('input-container').style.display = 'none';
-    document.getElementById('hint-area').style.display = 'none';
-    document.getElementById('result-area').style.display = 'block';
-    canvas.style.display = 'none';
-
-    // 해설 줄바꿈 및 수식 서식화
-    const formattedExp = currentQuiz.exp.split('\n').map(line => {
-        if (line.includes('$')) return `<div class="formula">${line.replace(/\$/g, '')}</div>`;
-        return `<p>${line}</p>`;
-    }).join('');
-
-    // [개선] 다중 정답 중 첫 번째 정답을 대표 정답으로 표시
-    const displayAnswer = currentQuiz.ans.split('|')[0].trim();
-
-    document.getElementById('result-content-box').innerHTML = `
-        <div class="solution-box">
-            <strong>[정답] ${displayAnswer}</strong>
-            ${formattedExp}
-        </div>`;
-
-    document.getElementById('result-msg').innerText = isWin ? `${nickname}님, 성공! 🎉` : `${nickname}님, 실패... 💀`;
-    document.getElementById('result-msg').style.color = isWin ? "#2ecc71" : "#ff4757";
-    
-    document.getElementById('share-btn').onclick = () => {
-        gtag('event', 'share_clicked', { 'status': isWin ? 'success' : 'fail' });
-        let attemptVisual = isWin ? (attemptsLeft === 3 ? "🟦🟦🟦" : (attemptsLeft === 2 ? "🟦🟦🟥" : "🟦🟥🟥")) : "🟥🟥🟥";
-        const shareText = `[시냅스 스파크] ⚡${streak}\n\n${attemptVisual} (${time})\n\n함께해요! : ${window.location.href}`;
-        navigator.clipboard.writeText(shareText).then(() => alert("성과가 복사되었습니다!"));
-    };
-}
-
-function saveToFirebase(n, t) {
-    const dateKey = TODAY_KEY.replace(/-/g, "");
-    const durationMs = Date.now() - startTime;
-    if (durationMs < 500) return;
-    database.ref('rankings/' + dateKey).push({
-        name: n, time: t, duration: durationMs,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    });
-}
-
-function displayGlobalRanking() {
-    const dateKey = TODAY_KEY.replace(/-/g, "");
-    database.ref('rankings/' + dateKey).orderByChild('time').limitToFirst(10).on('value', (snapshot) => {
-        const rankingList = document.getElementById('ranking-list');
-        rankingList.innerHTML = "";
-        const data = snapshot.val();
-        if (data) {
-            const sorted = Object.values(data).sort((a, b) => a.time.localeCompare(b.time));
-            sorted.forEach((item, idx) => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span><strong>${idx+1}. ${item.name}</strong></span> <span>${item.time}</span>`;
-                rankingList.appendChild(li);
-            });
-        } else { rankingList.innerHTML = "<li>첫 도전자가 되어보세요!</li>"; }
-    });
-}
-
-function updateStreakDisplay() {
-    let streak = parseInt(localStorage.getItem('streakCount')) || 0;
-    document.getElementById('streak-count').innerText = streak;
-}
-function updateLivesDisplay() {
-    const hearts = document.querySelectorAll('.heart');
-    hearts.forEach((heart, index) => { heart.innerText = index < attemptsLeft ? "❤️" : "🖤"; });
-}
-document.querySelectorAll('.color-dot').forEach(dot => {
-    dot.onclick = (e) => {
-        document.querySelector('.color-dot.active').classList.remove('active');
-        e.target.classList.add('active');
-        drawColor = e.target.dataset.color;
-        resetCtx();
-    };
-});
-canvas.onmousedown = (e) => { isDrawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
-canvas.onmousemove = (e) => { if (isDrawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
-canvas.onmouseup = () => isDrawing = false;
-document.getElementById('clear-memo-btn').onclick = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-document.getElementById('hint-btn').onclick = () => {
-    gtag('event', 'use_hint', { 'quiz_date': TODAY_KEY });
-    document.getElementById('hint-display').innerText = "💡 사고 가이드: " + currentQuiz.hint;
-    document.getElementById('hint-display').style.display = 'block';
-};
