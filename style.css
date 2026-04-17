@@ -1,13 +1,20 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-
-body { 
-    background-color: #ffffff; color: #333; 
-    display: flex; justify-content: center; align-items: flex-start; 
-    min-height: 100vh; padding: 80px 20px; overflow-y: auto; text-align: center; 
-}
-
+body { background-color: #ffffff; color: #333; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 80px 20px; overflow-y: auto; text-align: center; }
 #watermark { position: fixed; top: 15px; left: 20px; font-size: 11pt; font-weight: bold; color: #ccc; z-index: 1000; }
 .container { width: 100%; max-width: 900px; text-align: center; position: relative; }
+
+#penalty-overlay {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(255, 71, 87, 0.95); color: white; padding: 20px 40px;
+    border-radius: 50px; font-size: 1.5rem; font-weight: 800; z-index: 9999;
+    box-shadow: 0 10px 30px rgba(255, 71, 87, 0.4); animation: fadeInOut 1s ease-in-out;
+}
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -30%); }
+    20% { opacity: 1; transform: translate(-50%, -50%); }
+    80% { opacity: 1; transform: translate(-50%, -50%); }
+    100% { opacity: 0; transform: translate(-50%, -70%); }
+}
 
 #streak-display { font-size: 0.95rem; font-weight: bold; color: #ff9f43; margin-bottom: 10px; }
 header { margin-bottom: 50px; }
@@ -19,14 +26,9 @@ h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom:
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 .shake { animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both; }
 
-#memo-wrapper { 
-    position: relative; width: 100%; height: 48vh; 
-    background-color: #f8f9fa; border: 1px solid #eee; border-radius: 20px; 
-    margin-bottom: 25px; display: flex; justify-content: center; align-items: center; 
-}
+#memo-wrapper { position: relative; width: 100%; height: 48vh; background-color: #f8f9fa; border: 1px solid #eee; border-radius: 20px; margin-bottom: 25px; display: flex; justify-content: center; align-items: center; }
 #memo-canvas { position: absolute; top: 0; left: 0; z-index: 10; cursor: crosshair; }
 #lives-container { position: absolute; top: 20px; left: 20px; z-index: 25; display: flex; gap: 5px; font-size: 1.4rem; pointer-events: none; }
-
 #problem-area { padding: 40px; z-index: 5; pointer-events: none; width: 100%; white-space: pre-wrap; }
 #problem-text { font-size: 1.5rem; font-weight: 600; line-height: 1.8; color: #222; }
 
@@ -39,42 +41,19 @@ h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom:
 .input-group { display: flex; justify-content: center; align-items: center; gap: 15px; width: 100%; }
 input[type="text"] { padding: 18px; width: 380px; border: 1.5px solid #eee; border-radius: 12px; outline: none; font-size: 1.1rem; background: #fdfdfd; text-align: center; }
 button { padding: 18px 45px; background: #222; color: #fff; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
-
-#keyword-response { font-size: 1.1rem; margin-top: 10px; color: #4a90e2; font-weight: 600; }
 .secondary-btn { padding: 10px 22px; background-color: #f5f5f5; color: #666; font-size: 0.95rem; border:none; border-radius:10px; font-weight: 600; width: auto; }
+.share-btn { background-color: #2ecc71; margin: 30px auto 0 auto; width: 100%; max-width: 450px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); display: block; }
 
-.share-btn { 
-    background-color: #2ecc71; margin: 30px auto 0 auto; width: 100%; max-width: 450px;
-    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); display: block;
-}
+#answer-guide { animation: fadeIn 1s; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-#hint-display { color: #4a90e2; font-size: 1.1rem; margin-top: 25px; font-weight: 700; }
-#result-msg { font-size: 1.4rem; margin-top: 25px; margin-bottom: 20px; font-weight: 800; }
+.solution-box { text-align: left; background: #f0f4f8; padding: 30px; border-radius: 15px; margin-top: 20px; border: 1px solid #e1e8f0; line-height: 1.8; }
+.solution-box strong { color: #2c3e50; font-weight: 800; display: block; margin-bottom: 10px; font-size: 1.2rem; border-left: 4px solid #2c3e50; padding-left: 10px; }
+.solution-box .formula { background: #fff; padding: 15px; border-radius: 10px; margin: 10px 0; font-weight: 700; color: #4a90e2; display: block; text-align: center; font-size: 1.3rem; }
 
-.solution-box { 
-    text-align: center; background: #f0f4f8; padding: 30px; border-radius: 15px; 
-    margin-top: 20px; border: 1px solid #e1e8f0; line-height: 1.6;
-}
-.solution-box strong { color: #2c3e50; font-weight: 800; display: block; margin-bottom: 5px; font-size: 1.2rem; }
-
-#ranking-sidebar { 
-    position: fixed; right: 20px; top: 120px; width: 220px; background: #fff; padding: 20px; 
-    border-radius: 15px; border: 1px solid #eee; text-align: left; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
-}
+#ranking-sidebar { position: fixed; right: 20px; top: 120px; width: 220px; background: #fff; padding: 20px; border-radius: 15px; border: 1px solid #eee; text-align: left; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 #ranking-sidebar h3 { text-align: center; border-bottom: 1.5px solid #222; padding-bottom: 8px; margin-bottom: 15px; }
 #ranking-list { list-style: none; padding: 0; }
 #ranking-list li { font-size: 0.85rem; margin-bottom: 10px; display: flex; justify-content: space-between; color: #555; }
 
-@media (max-width: 1100px) {
-    #ranking-sidebar { position: static; width: 100%; max-width: 450px; margin: 50px auto; box-shadow: none; text-align: center; }
-}
-
-@media (max-width: 600px) {
-    body { padding-top: 80px; }
-    h1 { font-size: 1.8rem; }
-    #timer { right: 20px; font-size: 1.2rem; }
-    #memo-wrapper { height: 40vh; }
-    #problem-text { font-size: 1.15rem; padding: 20px; }
-    .input-group { flex-direction: column; gap: 10px; }
-    input[type="text"], button { width: 100%; max-width: 1000px; }
-}
+@media (max-width: 600px) { h1 { font-size: 1.8rem; } #timer { right: 20px; font-size: 1.2rem; } .input-group { flex-direction: column; } input[type="text"], button { width: 100%; } }
