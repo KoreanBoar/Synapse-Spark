@@ -13,9 +13,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>시냅스 스파크 | 매일 1분 뇌 부팅 퀴즈</title>
+    <meta name="description" content="매일 아침 00시, 새로운 지능형 퀴즈가 찾아옵니다. 당신의 시냅스를 깨우고 랭킹에 도전하세요!">
     
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://koreanboar.github.io/Synapse-Spark/">
+    <meta property="og:title" content="시냅스 스파크⚡ 당신의 뇌는 오늘 깨어있습니까?">
+    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/1164/1164620.png">
+
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#222222">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1164/1164620.png">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -24,6 +31,7 @@
 </head>
 <body>
     <div id="watermark">by 멧돼지</div>
+    
     <div id="penalty-overlay" style="display:none;">+30초 페널티 발생!</div>
 
     <div class="container">
@@ -40,6 +48,7 @@
                     <button id="start-btn">부팅 시작</button>
                 </div>
             </section>
+
             <section id="quiz-screen" style="display:none;">
                 <div id="memo-wrapper">
                     <canvas id="memo-canvas"></canvas>
@@ -59,8 +68,9 @@
                         <button id="clear-memo-btn">초기화</button>
                     </div>
                 </div>
+
                 <div class="footer-controls">
-                    <div id="hint-area">
+                    <div id="hint-area" style="margin-bottom: 25px;">
                         <button id="hint-btn" class="secondary-btn">💡 사고의 실타래 풀기 (힌트)</button>
                     </div>
                     <div id="input-container">
@@ -70,6 +80,7 @@
                         </div>
                         <p id="answer-guide"></p>
                     </div>
+
                     <div id="result-area" style="display:none;">
                         <div id="result-content-box"></div>
                         <p id="result-msg"></p>
@@ -78,11 +89,13 @@
                 </div>
             </section>
         </main>
+
         <aside id="ranking-sidebar">
             <h3>오늘의 TOP 10</h3>
             <ul id="ranking-list"><li>로딩 중...</li></ul>
         </aside>
     </div>
+
     <script src="script.js?v=1.1"></script>
 </body>
 </html>
