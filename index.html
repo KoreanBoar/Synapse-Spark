@@ -3,10 +3,10 @@
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-D73KL470HQ"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-D73KL470HQ');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-D73KL470HQ');
     </script>
 
     <meta charset="UTF-8">
@@ -30,6 +30,8 @@
 </head>
 <body>
     <div id="watermark">by 멧돼지</div>
+    <div id="penalty-overlay" style="display:none;">+30초 페널티 발생!</div>
+
     <div class="container">
         <header>
             <div id="streak-display">🔥 <span id="streak-count">0</span>일 연속 부팅 중</div>
@@ -67,9 +69,12 @@
                     <div id="hint-area" style="margin-bottom: 25px;">
                         <button id="hint-btn" class="secondary-btn">💡 사고의 실타래 풀기 (힌트)</button>
                     </div>
-                    <div id="input-area" class="input-group">
-                        <input type="text" id="answer" placeholder="정답을 입력하세요">
-                        <button id="submit-btn">제출</button>
+                    <div id="input-container">
+                        <div id="input-area" class="input-group">
+                            <input type="text" id="answer" placeholder="정답을 입력하세요">
+                            <button id="submit-btn">제출</button>
+                        </div>
+                        <p id="answer-guide" style="margin-top: 10px; color: #888; font-size: 0.9rem;"></p>
                     </div>
                     <div id="result-area" style="display:none;">
                         <div id="result-content-box"></div>
@@ -84,7 +89,6 @@
             <ul id="ranking-list"><li>로딩 중...</li></ul>
         </aside>
     </div>
-    
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js');
