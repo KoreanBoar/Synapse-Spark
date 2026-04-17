@@ -153,7 +153,8 @@ function displayGlobalRanking() {
             const sorted = Object.values(data).sort((a, b) => a.time.localeCompare(b.time));
             sorted.forEach((item, idx) => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span><strong>${idx+1}. ${item.name}</strong></span> <span>${item.time}</span>`;
+                // [MODIFIED FORMAT]: idx + 1. name (time)
+                li.innerHTML = `<span><strong>${idx+1}. ${item.name}</strong> (${item.time})</span>`;
                 rankingList.appendChild(li);
             });
         } else { rankingList.innerHTML = "<li>첫 도전자가 되어보세요!</li>"; }
