@@ -18,7 +18,7 @@ body { background-color: #ffffff; color: #333; display: flex; justify-content: c
 
 #streak-display { font-size: 0.95rem; font-weight: bold; color: #ff9f43; margin-bottom: 10px; }
 header { margin-bottom: 50px; }
-h1 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 10px; }
+<h1>Synapse Spark</h1> { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 10px; }
 #timer { 
     position: fixed; top: 15px; right: 30px; 
     font-size: clamp(1.2rem, 3vw, 1.6rem); 
@@ -69,5 +69,11 @@ button { padding: 18px 40px; background: #222; color: #fff; border: none; border
     input[type="text"], button { width: 100%; }
     #problem-text { padding: 20px; font-size: 1.15rem; }
     #memo-tools { display: none !important; }
-    #lives-container { position: relative; top: auto; left: auto; width: 100%; display: flex; justify-content: center; gap: 10px; padding-top: 15px; margin-bottom: -10px; z-index: 25; pointer-events: none; }
+    
+    /* [ADJUSTED] Centering hearts without pushing text */
+    #lives-container { 
+        position: absolute; top: 15px; left: 50%; 
+        transform: translateX(-50%); 
+        display: flex; gap: 10px; z-index: 25; 
+    }
 }
