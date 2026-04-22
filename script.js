@@ -12,19 +12,22 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// [NEW] 대량 비속어 블랙리스트 (v2.3 확장판)
+// [FIXED] 비속어 블랙리스트 (쉼표 누락 및 오타 전수 조사 완료)
 const BAD_WORDS = [
-    "시발", "씨발", "시빨", "씨빨", "시바", "씨바", "찌발", "씌발", "싀발", "시벌", "씨벌", "시부레", "시부랄", "시부레", "시빨",
+    "시발", "씨발", "시빨", "씨빨", "시바", "씨바", "찌발", "씌발", "싀발", "시벌", "씨벌", "시부레", "시부랄", "시빨",
     "병신", "븅신", "뵹신", "ㅄ", "ㅂㅅ", "빙신", "등신", "머저리", "쪼다", "찐따",
     "개새끼", "개세끼", "개쉐끼", "개스키", "개새", "개색끼", "개소리", "개돼지", "개자식",
     "지랄", "지뢀", "즤랄", "ㅈㄹ", "발광",
     "존나", "졸라", "좆", "좃", "조까", "좆까", "족까", "좃까", "좆만아", "좆밥", "좃밥",
-    "미친", "미친놈", "미친년", "미친새끼", "미친새키", "또라이", "똘아이", "똘추", "sex", "cex", "섹스"
+    "미친", "미친놈", "미친년", "미친새끼", "미친새키", "또라이", "똘아이", "똘추",
     "닥쳐", "아가리", "주둥이", "꺼져", "ㄲㅈ", "쳐먹어", "처먹어",
     "느금마", "느금", "니기미", "니애미", "패드립", "니앱", "니애비", "느그매",
     "염병", "앰창", "엠창", "엠생", "앰생", "창녀", "창놈", "걸레",
     "쓰레기", "호로", "호로자식", "쌍놈", "샹놈", "상놈", "쌍년", "샹년",
-    "일베", "메갈", "한남", "김치녀", "틀딱", "급식충", "벌레", "버러지"
+    "일베", "메갈", "한남", "김치녀", "틀딱", "급식충", "벌레", "버러지",
+    "섹스", "성기", "자위", "보지", "자지", "꼬추", "잠지", "똥꼬", "항문",
+    "강간", "성폭행", "원나잇", "조건만남", "성매매", "야동", "포르노", "오르가즘",
+    "따먹", "박고", "싸고", "싸줘", "젖통", "유두", "꼭지", "슴가", "가슴", "야해"
 ];
 
 let startTime, timerInterval, nickname = "", currentQuiz = null;
@@ -55,9 +58,7 @@ function resizeCanvas() {
 }
 function resetCtx() { ctx.strokeStyle = drawColor; ctx.lineWidth = 2; ctx.lineCap = "round"; }
 
-// 정규표현식 활용 지능형 닉네임 필터링
 function isBadNickname(name) {
-    // 공백, 특수문자, 숫자를 모두 제거하여 순수 글자만 추출 (v2.3 최적화)
     const cleaned = name.replace(/[0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\s]/gi, "");
     return BAD_WORDS.some(word => cleaned.includes(word));
 }
@@ -65,22 +66,14 @@ function isBadNickname(name) {
 document.getElementById('start-btn').onclick = async () => {
     nickname = document.getElementById('nickname').value.trim();
     if (!nickname) return alert("닉네임을 입력해주세요!");
-
-    if (isBadNickname(nickname)) {
-        return alert("부적절한 단어가 포함된 닉네임은 사용할 수 없습니다!");
-    }
+    if (isBadNickname(nickname)) return alert("부적절한 단어가 포함된 닉네임은 사용할 수 없습니다!");
     
     currentQuiz = await fetchTodayQuiz();
     gtag('event', 'quiz_start', { 'nickname': nickname, 'quiz_date': TODAY_KEY });
-
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('quiz-screen').style.display = 'block';
     document.getElementById('problem-text').innerText = currentQuiz.text;
-    
-    if (currentQuiz.guide) {
-        document.getElementById('answer-guide').innerText = "💡 가이드: " + currentQuiz.guide;
-    }
-
+    if (currentQuiz.guide) document.getElementById('answer-guide').innerText = "💡 가이드: " + currentQuiz.guide;
     startTime = Date.now();
     timerInterval = setInterval(() => {
         const diff = new Date(Date.now() - startTime);
@@ -92,7 +85,6 @@ document.getElementById('start-btn').onclick = async () => {
 document.getElementById('submit-btn').onclick = () => {
     const userInput = document.getElementById('answer').value.trim();
     if (!userInput) return;
-
     const isCorrect = checkAnswer(userInput, currentQuiz.ans);
     if (isCorrect) {
         clearInterval(timerInterval);
@@ -129,7 +121,6 @@ function showPenaltyMsg() {
 function processEnd(isWin) {
     const time = document.getElementById('timer').innerText;
     let streak = parseInt(localStorage.getItem('streakCount')) || 0;
-    
     if (isWin) {
         saveToFirebase(nickname, time);
         gtag('event', 'quiz_success', { 'time_taken': time, 'streak': streak + 1 });
@@ -141,22 +132,18 @@ function processEnd(isWin) {
         streak = 0; localStorage.setItem('streakCount', 0); 
         gtag('event', 'quiz_fail', { 'quiz_date': TODAY_KEY });
     }
-
     document.getElementById('input-container').style.display = 'none';
     document.getElementById('hint-area').style.display = 'none';
     document.getElementById('result-area').style.display = 'block';
     canvas.style.display = 'none';
-
     const formattedExp = currentQuiz.exp.split('\n').map(line => {
         if (line.includes('$')) return `<div class="formula">${line.replace(/\$/g, '')}</div>`;
         return `<p>${line}</p>`;
     }).join('');
-
     const displayAnswer = currentQuiz.ans.split('|')[0].trim();
     document.getElementById('result-content-box').innerHTML = `<div class="solution-box"><strong>[정답] ${displayAnswer}</strong>${formattedExp}</div>`;
     document.getElementById('result-msg').innerText = isWin ? `${nickname}님, 성공! 🎉` : `${nickname}님, 실패... 💀`;
     document.getElementById('result-msg').style.color = isWin ? "#2ecc71" : "#ff4757";
-    
     document.getElementById('share-btn').onclick = () => {
         gtag('event', 'share_clicked', { 'status': isWin ? 'success' : 'fail' });
         let attemptVisual = isWin ? (attemptsLeft === 3 ? "🟦🟦🟦" : (attemptsLeft === 2 ? "🟦🟦🟥" : "🟦🟥🟥")) : "🟥🟥🟥";
