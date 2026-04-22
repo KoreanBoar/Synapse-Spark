@@ -12,6 +12,21 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
+// [NEW] 대량 비속어 블랙리스트 (v2.3 확장판)
+const BAD_WORDS = [
+    "시발", "씨발", "시빨", "씨빨", "시바", "씨바", "찌발", "씌발", "싀발", "시벌", "씨벌", "시부레", "시부랄", "시부레", "시빨",
+    "병신", "븅신", "뵹신", "ㅄ", "ㅂㅅ", "빙신", "등신", "머저리", "쪼다", "찐따",
+    "개새끼", "개세끼", "개쉐끼", "개스키", "개새", "개색끼", "개소리", "개돼지", "개자식",
+    "지랄", "지뢀", "즤랄", "ㅈㄹ", "발광",
+    "존나", "졸라", "좆", "좃", "조까", "좆까", "족까", "좃까", "좆만아", "좆밥", "좃밥",
+    "미친", "미친놈", "미친년", "미친새끼", "미친새키", "또라이", "똘아이", "똘추", "sex", "cex", "섹스"
+    "닥쳐", "아가리", "주둥이", "꺼져", "ㄲㅈ", "쳐먹어", "처먹어",
+    "느금마", "느금", "니기미", "니애미", "패드립", "니앱", "니애비", "느그매",
+    "염병", "앰창", "엠창", "엠생", "앰생", "창녀", "창놈", "걸레",
+    "쓰레기", "호로", "호로자식", "쌍놈", "샹놈", "상놈", "쌍년", "샹년",
+    "일베", "메갈", "한남", "김치녀", "틀딱", "급식충", "벌레", "버러지"
+];
+
 let startTime, timerInterval, nickname = "", currentQuiz = null;
 let attemptsLeft = 3;
 const PENALTY_TIME = 30000;
@@ -40,9 +55,21 @@ function resizeCanvas() {
 }
 function resetCtx() { ctx.strokeStyle = drawColor; ctx.lineWidth = 2; ctx.lineCap = "round"; }
 
+// 정규표현식 활용 지능형 닉네임 필터링
+function isBadNickname(name) {
+    // 공백, 특수문자, 숫자를 모두 제거하여 순수 글자만 추출 (v2.3 최적화)
+    const cleaned = name.replace(/[0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\s]/gi, "");
+    return BAD_WORDS.some(word => cleaned.includes(word));
+}
+
 document.getElementById('start-btn').onclick = async () => {
     nickname = document.getElementById('nickname').value.trim();
     if (!nickname) return alert("닉네임을 입력해주세요!");
+
+    if (isBadNickname(nickname)) {
+        return alert("부적절한 단어가 포함된 닉네임은 사용할 수 없습니다!");
+    }
+    
     currentQuiz = await fetchTodayQuiz();
     gtag('event', 'quiz_start', { 'nickname': nickname, 'quiz_date': TODAY_KEY });
 
@@ -75,6 +102,7 @@ document.getElementById('submit-btn').onclick = () => {
         updateLivesDisplay();
         startTime -= PENALTY_TIME;
         showPenaltyMsg();
+        gtag('event', 'quiz_wrong_answer', { 'attempts_left': attemptsLeft });
         document.querySelector('.container').classList.add('shake');
         setTimeout(() => document.querySelector('.container').classList.remove('shake'), 300);
         if (attemptsLeft === 0) { clearInterval(timerInterval); processEnd(false); }
@@ -104,12 +132,14 @@ function processEnd(isWin) {
     
     if (isWin) {
         saveToFirebase(nickname, time);
+        gtag('event', 'quiz_success', { 'time_taken': time, 'streak': streak + 1 });
         if (localStorage.getItem('lastSolveDate') !== TODAY_KEY) {
             streak++; localStorage.setItem('streakCount', streak);
             localStorage.setItem('lastSolveDate', TODAY_KEY);
         }
     } else { 
         streak = 0; localStorage.setItem('streakCount', 0); 
+        gtag('event', 'quiz_fail', { 'quiz_date': TODAY_KEY });
     }
 
     document.getElementById('input-container').style.display = 'none';
@@ -128,6 +158,7 @@ function processEnd(isWin) {
     document.getElementById('result-msg').style.color = isWin ? "#2ecc71" : "#ff4757";
     
     document.getElementById('share-btn').onclick = () => {
+        gtag('event', 'share_clicked', { 'status': isWin ? 'success' : 'fail' });
         let attemptVisual = isWin ? (attemptsLeft === 3 ? "🟦🟦🟦" : (attemptsLeft === 2 ? "🟦🟦🟥" : "🟦🟥🟥")) : "🟥🟥🟥";
         const shareText = `[시냅스 스파크] ⚡${streak}\n\n${attemptVisual} (${time})\n\n함께해요! : ${window.location.href}`;
         navigator.clipboard.writeText(shareText).then(() => alert("성과가 복사되었습니다!"));
@@ -153,7 +184,6 @@ function displayGlobalRanking() {
             const sorted = Object.values(data).sort((a, b) => a.time.localeCompare(b.time));
             sorted.forEach((item, idx) => {
                 const li = document.createElement('li');
-                // [MODIFIED FORMAT]: idx + 1. name (time)
                 li.innerHTML = `<span><strong>${idx+1}. ${item.name}</strong> (${item.time})</span>`;
                 rankingList.appendChild(li);
             });
@@ -184,6 +214,7 @@ canvas.onmouseup = () => isDrawing = false;
 document.getElementById('clear-memo-btn').onclick = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 document.getElementById('hint-btn').onclick = () => {
+    gtag('event', 'use_hint', { 'quiz_date': TODAY_KEY });
     document.getElementById('hint-display').innerText = "💡 사고 가이드: " + currentQuiz.hint;
     document.getElementById('hint-display').style.display = 'block';
 };
